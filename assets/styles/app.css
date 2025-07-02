@@ -1,3 +1,2 @@
-body {
-    background-color: skyblue;
-}
+/* noinspection CssUnknownTarget */
+@import "tailwindcss";
