@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FestivalRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Festival
 {
     #[ORM\Id]
@@ -37,7 +38,7 @@ class Festival
     /**
      * @var Collection<int, FestivalBand>
      */
-    #[ORM\OneToMany(targetEntity: FestivalBand::class, mappedBy: 'festival_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: FestivalBand::class, mappedBy: 'festival', orphanRemoval: true)]
     private Collection $bands;
 
     #[ORM\ManyToOne(inversedBy: 'festivals')]
@@ -47,20 +48,32 @@ class Festival
     /**
      * @var Collection<int, TicketType>
      */
-    #[ORM\OneToMany(targetEntity: TicketType::class, mappedBy: 'festival_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: TicketType::class, mappedBy: 'festival', orphanRemoval: true)]
     private Collection $ticketTypes;
 
     /**
      * @var Collection<int, Booking>
      */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'festival_id')]
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'festival')]
     private Collection $bookings;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     public function __construct()
     {

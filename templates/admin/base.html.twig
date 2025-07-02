@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="flex h-screen">
-        <aside class="bg-[#202020] w-64 text-[#ca8f53] flex flex-col items-center">
+        <aside class="bg-[#202020] w-1/5 text-[#ca8f53] flex flex-col items-center">
             <div class="flex flex-col items-center">
                 <h1 class="text-[35px] font-semibold mt-2">Show Time</h1>
 
@@ -23,20 +23,41 @@
                 </div>
             </div>
 
-            <nav class="flex flex-col text-[22px] font-bold w-full mt-13">
-                <a href="#" class="py-2  text-center hover:bg-[#2d2d2d]">Dashboard</a>
-                <a href="#" class="py-2 text-center hover:bg-[#2d2d2d]">Festivals</a>
-                <a href="#" class="py-2 text-center hover:bg-[#2d2d2d]">Bands</a>
-                <a href="#" class="py-2 text-center hover:bg-[#2d2d2d]">Tickets</a>
-                <a href="#" class="py-2 text-center hover:bg-[#2d2d2d]">Staff</a>
+            <nav x-data class="flex flex-col text-[22px] font-bold w-full mt-13" x-transition>
+                {% set currentRoute = app.request.attributes.get('_route') %}
+
+                <a href="{{ path('app_admin') }}"
+                   class="py-2  text-center hover:bg-[#2d2d2d] {{ currentRoute == 'app_admin' ? 'bg-[#2d2d2d]' : '' }}">
+                    Dashboard
+                </a>
+
+                <a href="{{ path('app_admin_festival') }}"
+                   class="py-2 text-center hover:bg-[#2d2d2d] {{ currentRoute == 'app_admin_festival' ? 'bg-[#2d2d2d]' : '' }}">
+                    Festivals
+                </a>
+
+                <a href="{{ path('app_admin_band') }}"
+                   class="py-2 text-center hover:bg-[#2d2d2d] {{ currentRoute == 'app_admin_band' ? 'bg-[#2d2d2d]' : '' }}">
+                   Bands
+                </a>
+
+                <a href="{{ path('app_admin_ticket_type') }}"
+                   class="py-2 text-center hover:bg-[#2d2d2d] {{ currentRoute == 'app_admin_ticket_type' ? 'bg-[#2d2d2d]' : '' }}">
+                    Tickets
+                </a>
+
+                <a href="{{ path('app_admin_staff') }}"
+                   class="py-2 text-center hover:bg-[#2d2d2d] {{ currentRoute == 'app_admin_staff' ? 'bg-[#2d2d2d]' : '' }}">
+                    Staff
+                </a>
             </nav>
 
             <div class="text-[22px] font-bold w-full flex mt-auto flex-col mb-5">
-                <a href="#" class="py-2 text-center hover:bg-[#2d2d2d]">Logout</a>
+                <a href="#" class="py-2 text-center hover:bg-[#2d2d2d]" @click.prevent="">Logout</a>
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto px-20 py-10 bg-whitesmoke">
+        <main class="flex-1 overflow-y-auto px-20 py-10 bg-gray-100">
             {% block main %}{% endblock %}
         </main>
     </div>

@@ -1,0 +1,12 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Festivals{% endblock %}
+
+{% block main %}
+    {% include 'admin/components/_nav_bar.html.twig' with { title: 'Festivals'} %}
+
+    {% include 'admin/components/_table.html.twig' with {
+        columns: ['Name', 'Location', 'Period', 'Actions'],
+        rows: festivals
+    } %}
+{% endblock %}

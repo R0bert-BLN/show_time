@@ -40,7 +40,7 @@ class TicketPayment
     #[ORM\ManyToMany(targetEntity: TicketType::class, inversedBy: 'ticketPayments')]
     private Collection $ticketTypes;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'ticketPayments')]

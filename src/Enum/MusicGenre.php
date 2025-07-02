@@ -46,4 +46,9 @@ enum MusicGenre: string
     case Grunge = 'Grunge';
     case Emo = 'Emo';
     case Hardcore = 'Hardcore';
+
+    public static function getAllGenres(): array
+    {
+        return array_map(fn ($genre) => $genre, self::cases());
+    }
 }

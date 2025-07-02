@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BandRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Band
 {
     #[ORM\Id]
@@ -23,7 +24,7 @@ class Band
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
     #[ORM\Column(length: 255)]
@@ -41,8 +42,20 @@ class Band
     /**
      * @var Collection<int, FestivalBand>
      */
-    #[ORM\OneToMany(targetEntity: FestivalBand::class, mappedBy: 'band_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: FestivalBand::class, mappedBy: 'band', orphanRemoval: true)]
     private Collection $festivals;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     public function __construct()
     {

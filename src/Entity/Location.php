@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Location
 {
     #[ORM\Id]
@@ -27,14 +28,26 @@ class Location
     /**
      * @var Collection<int, Festival>
      */
-    #[ORM\OneToMany(targetEntity: Festival::class, mappedBy: 'location_id')]
+    #[ORM\OneToMany(targetEntity: Festival::class, mappedBy: 'location')]
     private Collection $festivals;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     public function __construct()
     {

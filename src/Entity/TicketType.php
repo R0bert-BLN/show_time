@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TicketTypeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class TicketType
 {
     #[ORM\Id]
@@ -56,14 +57,26 @@ class TicketType
     /**
      * @var Collection<int, TicketPayment>
      */
-    #[ORM\ManyToMany(targetEntity: TicketPayment::class, mappedBy: 'ticketType')]
+    #[ORM\ManyToMany(targetEntity: TicketPayment::class, mappedBy: 'ticketTypes')]
     private Collection $ticketPayments;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     public function __construct()
     {
