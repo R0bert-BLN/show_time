@@ -6,6 +6,7 @@ use App\Repository\FestivalBandRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FestivalBandRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class FestivalBand
 {
     #[ORM\Id]
@@ -35,6 +36,18 @@ class FestivalBand
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {

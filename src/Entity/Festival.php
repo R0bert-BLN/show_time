@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: FestivalRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -38,7 +39,11 @@ class Festival
     /**
      * @var Collection<int, FestivalBand>
      */
-    #[ORM\OneToMany(targetEntity: FestivalBand::class, mappedBy: 'festival', orphanRemoval: true)]
+    #[ORM\OneToMany(
+        targetEntity: FestivalBand::class,
+        mappedBy: 'festival',
+        cascade: ['persist'],
+        orphanRemoval: true)]
     private Collection $bands;
 
     #[ORM\ManyToOne(inversedBy: 'festivals')]
@@ -67,12 +72,18 @@ class Festival
     public function onCreate(): void
     {
         $this->createdAt = new \DateTimeImmutable();
+
+        $slugger = new AsciiSlugger();
+        $this->slug = $slugger->slug($this->name);
     }
 
     #[ORM\PreUpdate]
     public function onUpdate(): void
     {
         $this->updatedAt = new \DateTime();
+
+        $slugger = new AsciiSlugger();
+        $this->slug = $slugger->slug($this->name);
     }
 
     public function __construct()

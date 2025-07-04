@@ -8,6 +8,9 @@ import './bootstrap.js';
 import './styles/app.css';
 import {dropdown} from './js/components/dropdown.js';
 import {buttons} from "./js/components/buttons.js";
+import {tables} from "./js/components/tables.js";
+import {colors} from "./js/components/colors.js";
+import {bandsSubForms} from "./js/components/bandsSubForms.js";
 
 document.addEventListener('turbo:load', () => {
     Alpine.start();
@@ -16,6 +19,9 @@ document.addEventListener('turbo:load', () => {
 document.addEventListener('alpine:init', () => {
     Alpine.data('dropdown', dropdown);
     Alpine.data('buttons', buttons);
+    Alpine.data('tables', tables);
+    Alpine.data('colors', colors);
+    Alpine.data('bandsSubForms', bandsSubForms);
 });
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

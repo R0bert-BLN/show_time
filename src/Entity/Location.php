@@ -54,6 +54,11 @@ class Location
         $this->festivals = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->city;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

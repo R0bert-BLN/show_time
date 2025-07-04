@@ -4,6 +4,6 @@
     <div x-data="buttons" class="flex gap-4" x-cloak>
         <a href="#" @click.prevent="" :class="secondary">Filter</a>
         <a href="#" @click.prevent="" :class="secondary">Search</a>
-        <a href="#" @click.prevent="" :class="primary">Add</a>
+        <a href="{{ path(add_path) }}" :class="primary">Add</a>
     </div>
 </nav>

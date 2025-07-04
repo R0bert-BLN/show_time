@@ -1,0 +1,8 @@
+<nav x-data="buttons" class="flex justify-between items-center">
+    <a href="{{ path(back_path) }}" :class="secondary">Back</a>
+
+    <div class="flex gap-4" x-cloak>
+        <a href="#" @click.prevent="" :class="secondary">Delete</a>
+        <a href="#" @click.prevent="" :class="primary">Edit</a>
+    </div>
+</nav>
