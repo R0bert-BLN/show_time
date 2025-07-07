@@ -3,9 +3,7 @@
 {% block title %}Festivals{% endblock %}
 
 {% block main %}
-    {% include 'admin/components/_nav_bar_new.html.twig' with {
-        back_path: 'app_admin_festival',
-        button_text: 'Create'} %}
+    {% include 'admin/components/_nav_bar_new.html.twig'%}
 
     <div x-data="{...colors(), ...buttons()}" class="w-7/12 mx-auto mt-10">
         {{ form_start(form) }}

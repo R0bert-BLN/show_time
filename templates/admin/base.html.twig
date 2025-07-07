@@ -18,7 +18,7 @@
                     </svg>
                 </div>
 
-                <p class="text-[20px] font-[600] text-[#dcdcdc]">username</p>
+                <p class="text-[20px] font-[600] text-[#dcdcdc]">{{ app.user.firstName }} {{ app.user.lastName }}</p>
             </div>
         </div>
 
@@ -45,14 +45,14 @@
                 Tickets
             </a>
 
-            <a href="{{ path('app_admin_staff') }}"
+            <a @click.prevent="" href="{{ path('app_admin_staff') }}"
                class="py-2 text-center hover:bg-[#2d2d2d] {{ currentRoute starts with 'app_admin_staff' ? 'bg-[#2d2d2d]' : '' }}">
                 Staff
             </a>
         </nav>
 
         <div class="text-[22px] font-bold w-full flex mt-auto flex-col mb-5">
-            <a href="#" class="py-2 text-center hover:bg-[#2d2d2d]" @click.prevent="">Logout</a>
+            <a href="{{ path('app_logout') }}" class="py-2 text-center hover:bg-[#2d2d2d]">Logout</a>
         </div>
     </aside>
 

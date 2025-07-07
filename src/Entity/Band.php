@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: BandRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -49,12 +50,18 @@ class Band
     public function onCreate(): void
     {
         $this->createdAt = new \DateTimeImmutable();
+
+        $slugger = new AsciiSlugger();
+        $this->slug = $slugger->slug($this->name);
     }
 
     #[ORM\PreUpdate]
     public function onUpdate(): void
     {
         $this->updatedAt = new \DateTime();
+
+        $slugger = new AsciiSlugger();
+        $this->slug = $slugger->slug($this->name);
     }
 
     public function __construct()

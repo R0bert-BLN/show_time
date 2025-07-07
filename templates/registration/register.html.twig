@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    <div class="w-3/12 mx-auto mt-20 flex flex-col items-center">
+        <h1 class="text-[40px] mb-20 font-bold text-[#ca8f53]">Register</h1>
+
+        {{ form_errors(registrationForm) }}
+
+        {{ form_start(registrationForm) }}
+
+        {{ form_row(registrationForm.email, {
+            label_attr: { class: 'text-[#ca8f53] font-bold text-[25px]' },
+            attr: {
+                class: 'w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]'
+            }
+        }) }}
+
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Password',
+            label_attr: { class: 'text-[#ca8f53] font-bold text-[25px]' },
+            attr: {
+                class: 'w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]'
+            }
+        }) }}
+
+        <div class="flex justify-center">
+            {{ form_row(registrationForm.agreeTerms, {
+                label_attr: { class: 'text-[#ca8f53] font-bold text-[18px] mr-5' },
+                attr: {
+                    class: 'mt-10'
+                }
+            }) }}
+        </div>
+
+        <div class="mt-10 flex justify-center">
+            <button class="text-[#202020] bg-[#ca8f53] py-2 px-4 rounded-md font-bold text-[18px] hover:opacity-80 cursor-pointer" type="submit">Register</button>
+        </div>
+
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}
