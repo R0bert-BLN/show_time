@@ -16,7 +16,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
         if (in_array('ROLE_ADMIN', $roles)) {
             return new RedirectResponse('/admin');
         } else {
-            return new RedirectResponse('/show-time');
+            return new RedirectResponse('/festival');
         }
     }
 }

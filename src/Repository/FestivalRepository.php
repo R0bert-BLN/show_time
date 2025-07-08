@@ -16,6 +16,14 @@ class FestivalRepository extends ServiceEntityRepository
         parent::__construct($registry, Festival::class);
     }
 
+    public function findTopFestivals(int $limit = 3): array
+    {
+        return $this->createQueryBuilder('f')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return FestivalFixtures[] Returns an array of FestivalFixtures objects
     //     */

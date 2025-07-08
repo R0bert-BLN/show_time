@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FestivalBandRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FestivalBandRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -18,9 +19,20 @@ class FestivalBand
     private ?\DateTime $startTime = null;
 
     #[ORM\Column]
+    #[Assert\GreaterThan(
+        propertyPath: 'startDate',
+        message: 'End date must be after the start date.'
+    )]
     private ?\DateTime $endTime = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Stage name must be at least {{ limit }} characters long.',
+        maxMessage: 'Stage name cannot be longer than {{ limit }} characters.'
+    )]
     private ?string $stage = null;
 
     #[ORM\ManyToOne(inversedBy: 'bands')]

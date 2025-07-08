@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: FestivalRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -19,18 +21,31 @@ class Festival
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Please enter a festival name.')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'The name must be at least {{ limit }} characters long.',
+        maxMessage: 'The name cannot be longer than {{ limit }} characters.',
+    )]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: 'Please enter a festival description.')]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\GreaterThan(
+        propertyPath: 'startDate',
+        message: 'End date must be after the start date.'
+    )]
     private ?\DateTime $endDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: 'Please enter a valid URL.')]
     private ?string $picture = null;
 
     #[ORM\Column(length: 255)]

@@ -6,6 +6,7 @@ use App\Repository\LocationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -17,12 +18,33 @@ class Location
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'The name must be at least {{ limit }} characters long.',
+        maxMessage: 'The name cannot be longer than {{ limit }} characters.',
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'The name must be at least {{ limit }} characters long.',
+        maxMessage: 'The name cannot be longer than {{ limit }} characters.',
+    )]
     private ?string $country = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'The name must be at least {{ limit }} characters long.',
+        maxMessage: 'The name cannot be longer than {{ limit }} characters.',
+    )]
     private ?string $city = null;
 
     /**

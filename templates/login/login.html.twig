@@ -19,12 +19,12 @@
 
             <div class="flex flex-col w-full">
                 <label class="text-[#ca8f53] font-bold text-[25px]" for="username">Email</label>
-                <input class="w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]" type="email" value="{{ last_username }}" name="_username" id="username" autocomplete="email" required autofocus>
+                <input class="placeholder:text-[#6d6e6f] w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]" type="email" name="_username" id="username" autocomplete="email" placeholder="Enter your email" required autofocus>
             </div>
 
             <div class="flex flex-col w-full mt-10">
                 <label class="text-[#ca8f53] font-bold text-[25px]" for="password">Password</label>
-                <input class="w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]" type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                <input class="placeholder:text-[#6d6e6f] form-control w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]" type="password" name="_password" id="password" autocomplete="current-password" placeholder="Enter your password" required>
             </div>
 
             <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('auth_login') }}">

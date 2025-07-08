@@ -7,6 +7,6 @@
     "alpinejs": "^3.14.9"
   },
   "scripts": {
-    "alpine": "esbuild assets/js/alpine.js --bundle --outfile=public/build/alpine.js --watch"
+    "alpine": "esbuild assets/js/alpine.js --bundle --outfile=public/build/alpine.js --watch=forever"
   }
 }

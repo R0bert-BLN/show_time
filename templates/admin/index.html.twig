@@ -3,9 +3,9 @@
 {% block title %}Admin Panel{% endblock %}
 
 {% block main %}
-    <nav class="flex justify-between items-center">
+    <nav x-data="{...buttons(), ...colors()}" class="flex justify-between items-center">
         <h1 class="text-[35px] font-bold text-[#ca8f53]">Dashboard</h1>
-    </nav>
 
-    <h1 class="text-[35px] font-bold text-[#ca8f53] text-center mt-5">To be implemented</h1>
+        <a href="{{ path('app_show-time') }}" :class="primary">View Site</a>
+    </nav>
 {% endblock %}

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TicketTypeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -22,9 +23,17 @@ class TicketType
     private ?Festival $festival = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'The name must be at least {{ limit }} characters long.',
+        maxMessage: 'The name cannot be longer than {{ limit }} characters.',
+    )]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -34,12 +43,23 @@ class TicketType
     private ?\DateTime $startSaleDate = null;
 
     #[ORM\Column]
+    #[Assert\GreaterThan(
+        propertyPath: 'startSaleDate',
+        message: 'End date must be after the start date.'
+    )]
     private ?\DateTime $endSaleDate = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
 
     #[ORM\Column(length: 3)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 3,
+        max: 3,
+        minMessage: 'The name must be {{ limit }} characters long.',
+        maxMessage: 'The name must be {{ limit }} characters long.',
+    )]
     private ?string $currency = null;
 
     /**

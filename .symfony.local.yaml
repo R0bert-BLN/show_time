@@ -4,3 +4,6 @@ workers:
 
     alpine:
         cmd: ['npm', 'run', 'alpine']
+
+    messenger:
+        cmd: [ 'symfony', 'console', 'messenger:consume', 'async' ]

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\public;
 
+use App\Repository\FestivalRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,10 +10,10 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PublicController extends AbstractController
 {
     #[Route('/show-time', name: 'app_show-time')]
-    public function index(): Response
+    public function index(FestivalRepository $festivalRepository): Response
     {
         return $this->render('public/index.html.twig', [
-            'controller_name' => 'PublicController',
+            'festivals' => $festivalRepository->findTopFestivals(),
         ]);
     }
 }
