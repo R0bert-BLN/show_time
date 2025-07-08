@@ -16,7 +16,7 @@
     <table x-data="{...tables(), ...colors(), ...buttons()}" class="w-5/6 mt-10 mx-auto" :class="table" x-cloak>
         <thead>
         <tr :class="row">
-            <th class="w-1/5" :class="headCell">Name</th>
+            <th class="w-3/12" :class="headCell">Name</th>
             <th class="w-1/5" :class="headCell">Festival</th>
             <th class="w-1/5" :class="headCell">Price</th>
             <th class="w-1/5" :class="headCell">Sold</th>
@@ -34,7 +34,7 @@
 
                 <td :class="bodyCell">{{ ticket.festival.name }}</td>
                 <td :class="bodyCell">{{ ticket.price }} {{ ticket.currency }}</td>
-                <td :class="bodyCell">sold tickets</td>
+                <td :class="bodyCell">-</td>
                 <td :class="bodyCell">{{ ticket.totalTickets }}</td>
 
                 <td class="flex justify-end gap-2" :class="bodyCell">

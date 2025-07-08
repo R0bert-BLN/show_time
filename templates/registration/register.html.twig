@@ -13,21 +13,24 @@
         {{ form_errors(registrationForm) }}
 
         {{ form_start(registrationForm) }}
+        <div>
+            {{ form_row(registrationForm.email, {
+                label_attr: { class: 'text-[#ca8f53] font-bold text-[25px]' },
+                attr: {
+                    class: 'w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]'
+                }
+            }) }}
+        </div>
 
-        {{ form_row(registrationForm.email, {
-            label_attr: { class: 'text-[#ca8f53] font-bold text-[25px]' },
-            attr: {
-                class: 'w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]'
-            }
-        }) }}
-
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password',
-            label_attr: { class: 'text-[#ca8f53] font-bold text-[25px]' },
-            attr: {
-                class: 'w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]'
-            }
-        }) }}
+        <div class="w-full mt-10">
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password',
+                label_attr: { class: 'text-[#ca8f53] font-bold text-[25px]' },
+                attr: {
+                    class: 'w-full py-2 focus:outline-none border-b-2 border-gray-400 focus:border-[#ca8f53] text-[#6d6e6f] text-[18px]'
+                }
+            }) }}
+        </div>
 
         <div class="flex justify-center">
             {{ form_row(registrationForm.agreeTerms, {
