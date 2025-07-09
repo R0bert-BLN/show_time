@@ -85,7 +85,7 @@ class RegistrationController extends AbstractController
 
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_show-time');
+        return $this->redirectToRoute('app_festival');
     }
 
     #[Route('/verify/pending', name: 'app_verify_pending')]

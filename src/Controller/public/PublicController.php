@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class PublicController extends AbstractController
 {
-    #[Route('/show-time', name: 'app_show-time')]
+    #[Route('/', name: 'app_show-time')]
     public function index(FestivalRepository $festivalRepository): Response
     {
         return $this->render('public/index.html.twig', [

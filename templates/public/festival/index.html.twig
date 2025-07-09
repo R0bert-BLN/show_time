@@ -1,20 +1,11 @@
 {% extends 'public/base.html.twig' %}
 
-{% block title %}Hello FestivalController!{% endblock %}
+{% block title %}Festivals{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/Projects/ShowTime/src/Controller/FestivalController.php</code></li>
-        <li>Your template at <code>D:/Projects/ShowTime/templates/festival/index.html.twig</code></li>
-    </ul>
-</div>
+{% block content %}
+    <div class="flex flex-col mx-auto gap-8 scrollbar-hide h-auto mb-15">
+        {% for festival in festivals %}
+            {% include 'public/components/_festival_row.html.twig' with {festival: festival} %}
+        {% endfor %}
+    </div>
 {% endblock %}
