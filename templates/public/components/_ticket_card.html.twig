@@ -1,0 +1,12 @@
+<div class="flex flex-col justify-center items-center gap-2 px-5 py-3 hover:border-y-1 border-[#ca8f53]">
+    <div class="flex justify-between items-center w-full">
+        <div class="flex flex-col">
+            <h1 class="text-[20px] font-bold text-[#ca8f53]">{{ ticket.name }}</h1>
+            <p class="text-[15px] font-bold text-gray-700 py-2">{{ ticket.price }} {{ ticket.currency }}</p>
+        </div>
+
+        <button type="button" class="py-1 px-3 font-bold text-[#15px] bg-[#ca8f53] text-[#202020] cursor-pointer rounded-md hover:opacity-80">Add To Cart</button>
+    </div>
+
+    <p class="text-[15px] text-gray-700">{{ ticket.description }}</p>
+</div>

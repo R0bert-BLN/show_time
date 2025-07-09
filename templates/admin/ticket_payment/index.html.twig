@@ -1,0 +1,19 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Ticket Payment{% endblock %}
+
+{% block main %}
+    {% include 'admin/components/_nav_bar.html.twig' with {
+        title: 'Tickets',
+        add_path: 'app_admin_ticket_type_new'} %}
+
+    <div x-data="{...colors()}" class="flex justify-center w-5/6 mx-auto mt-15">
+        <a href="{{ path('app_admin_ticket_type') }}" class="text-[25px] font-semibold hover:opacity-80 cursor-pointer px-5" :class="textColor">TYPE</a>
+        <a href="{{ path('app_admin_ticket_payment') }}" class="text-[25px] font-semibold hover:opacity-80 cursor-pointer px-5 border-x-2 border-[#ca8f53]" :class="primaryColor">PAYMENT</a>
+        <a href="{{ path('app_admin_issued_ticket') }}" class="text-[25px] font-semibold hover:opacity-80 cursor-pointer px-5" :class="textColor">ISSUED</a>
+    </div>
+
+    <div class="w-5/6 mt-10 mx-auto">
+        <h1 class="text-[25px] font-bold text-[#ca8f53]">Ticket Payment</h1>
+    </div>
+{% endblock %}

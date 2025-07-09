@@ -15,7 +15,7 @@
 
 
         <div>
-            <a :class="primary" @click.prevent="" href="#">
+            <a :class="primary" href="{{ path('app_festival_show', {'id': festival.id}) }}">
                 Check It Out
             </a>
         </div>

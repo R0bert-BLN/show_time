@@ -6,5 +6,5 @@
     <h1 class="text-[25px] font-bold text-[#ca8f53] text-center">{{ band.name }}</h1>
     <h3 class="text-[18px] font-semibold text-center mt-2 mb-5" :class="textColor">{{ band.genre.value }}</h3>
 
-    <a class="mt-5" :class="primary" @click.prevent="" href="#">View</a>
+    <a class="mt-5" :class="primary" href="{{ path('app_band_show', {'id': band.id}) }}">View</a>
 </div>
