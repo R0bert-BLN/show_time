@@ -5,7 +5,8 @@
 {% block main %}
     {% include 'admin/components/_nav_bar.html.twig' with {
         title: 'Tickets',
-        add_path: 'app_admin_ticket_type_new'} %}
+        add_path: 'app_admin_ticket_type_new',
+        search_path: 'app_admin_issued_ticket'} %}
 
     <div x-data="{...colors()}" class="flex justify-center w-5/6 mx-auto mt-15">
         <a href="{{ path('app_admin_ticket_type') }}" class="text-[25px] font-semibold hover:opacity-80 cursor-pointer px-5" :class="textColor">TYPE</a>

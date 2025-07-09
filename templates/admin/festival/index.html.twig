@@ -5,7 +5,8 @@
 {% block main %}
     {% include 'admin/components/_nav_bar.html.twig' with {
         title: 'Festivals',
-        add_path: 'app_admin_festival_new'} %}
+        add_path: 'app_admin_festival_new',
+        search_path: 'app_admin_festival'} %}
 
     <table x-data="{...tables(), ...colors(), ...buttons()}" class="w-9/12 mt-12 mx-auto" :class="table" x-cloak>
         <thead>
@@ -19,7 +20,7 @@
         </thead>
 
         <tbody>
-            {% for festival in festivals %}
+            {% for festival in pagination %}
                 <tr :class="row">
                     <td :class="bodyCell">
                         <a href="{{ path('app_admin_festival_show', { 'id': festival.id }) }}" class="hover:opacity-80">
@@ -73,4 +74,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="text-[18px] text-gray-800 text-center mt-4">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}

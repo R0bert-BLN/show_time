@@ -5,7 +5,8 @@
 {% block main %}
     {% include 'admin/components/_nav_bar.html.twig' with {
         title: 'Bands',
-        add_path: 'app_admin_band_new'} %}
+        add_path: 'app_admin_band_new',
+        search_path: 'app_admin_band'} %}
 
     <table x-data="{...tables(), ...colors(), ...buttons()}" class="w-4/6 mt-12 mx-auto" :class="table" x-cloak>
         <thead>
@@ -17,7 +18,7 @@
         </thead>
 
         <tbody>
-        {% for band in bands %}
+        {% for band in pagination %}
             <tr :class="row">
                 <td :class="bodyCell">
                     <a href="{{ path('app_admin_band_show', { 'id': band.id }) }}" class="hover:opacity-80">{{ band.name }}</a>
@@ -53,4 +54,8 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="text-[18px] text-gray-800 text-center mt-4">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}

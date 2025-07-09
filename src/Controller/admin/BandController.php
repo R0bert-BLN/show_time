@@ -7,6 +7,7 @@ use App\Form\BandForm;
 use App\Form\CreateFestivalForm;
 use App\Repository\BandRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +20,19 @@ final class BandController extends AbstractController
     }
 
     #[Route('/admin/band', name: 'app_admin_band', methods: ['GET'])]
-    public function index(BandRepository $bandRepository): Response
+    public function index(
+        BandRepository $bandRepository,
+        PaginatorInterface $paginator,
+        Request $request): Response
     {
+        $searchParam = $request->query->get('search');
+
+        $pagination = $paginator->paginate(
+            $bandRepository->getBandsQueryBuilder($searchParam),
+            $request->query->getInt('page', 1), 10);
+
         return $this->render('admin/band/index.html.twig', [
-            'bands' => $bandRepository->findAll(),
+            'pagination' => $pagination
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\TicketType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,6 +15,21 @@ class TicketTypeRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TicketType::class);
+    }
+
+    public function getTicketTypesQueryBuilder(?string $searchTerm): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('t')
+            ->leftJoin('t.festival', 'f')
+            ->orderBy('t.name', 'ASC');
+
+        if ($searchTerm) {
+            $queryBuilder
+                ->andWhere('t.name LIKE :searchTerm OR f.name LIKE :searchTerm')
+                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
+
+        return $queryBuilder;
     }
 
     //    /**

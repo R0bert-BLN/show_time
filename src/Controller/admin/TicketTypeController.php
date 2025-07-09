@@ -6,6 +6,7 @@ use App\Entity\TicketType;
 use App\Form\TicketTypeForm;
 use App\Repository\TicketTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,19 @@ use Symfony\Component\Routing\Attribute\Route;
 final class TicketTypeController extends AbstractController
 {
     #[Route('/admin/ticket/type', name: 'app_admin_ticket_type', methods: ['GET'])]
-    public function index(TicketTypeRepository $ticketTypeRepository): Response
+    public function index(
+        TicketTypeRepository $ticketTypeRepository,
+        PaginatorInterface $paginator,
+        Request $request): Response
     {
+        $searchParam = $request->query->get('search');
+
+        $pagination = $paginator->paginate(
+            $ticketTypeRepository->getTicketTypesQueryBuilder($searchParam),
+            $request->query->getInt('page', 1), 10);
+
         return $this->render('/admin/ticket_type/index.html.twig', [
-            'tickets' => $ticketTypeRepository->findAll(),
+            'pagination' => $pagination
         ]);
     }
 

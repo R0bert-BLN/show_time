@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Band;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,6 +15,20 @@ class BandRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Band::class);
+    }
+
+    public function getBandsQueryBuilder(?string $searchTerm): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('b')
+            ->orderBy('b.name', 'ASC');
+
+        if ($searchTerm) {
+            $queryBuilder
+                ->andWhere('b.name LIKE :searchTerm OR b.genre LIKE :searchTerm')
+                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
+
+        return $queryBuilder;
     }
 
     //    /**

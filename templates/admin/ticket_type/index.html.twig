@@ -5,7 +5,8 @@
 {% block main %}
     {% include 'admin/components/_nav_bar.html.twig' with {
         title: 'Tickets',
-        add_path: 'app_admin_ticket_type_new'} %}
+        add_path: 'app_admin_ticket_type_new',
+        search_path: 'app_admin_ticket_type'} %}
 
     <div x-data="{...colors()}" class="flex justify-center w-5/6 mx-auto mt-15">
         <a href="{{ path('app_admin_ticket_type') }}" class="text-[25px] font-semibold hover:opacity-80 cursor-pointer px-5" :class="primaryColor">TYPE</a>
@@ -26,7 +27,7 @@
         </thead>
 
         <tbody>
-        {% for ticket in tickets %}
+        {% for ticket in pagination %}
             <tr :class="row">
                 <td :class="bodyCell">
                     <a class="hover:opacity-80" href="{{ path('app_admin_ticket_type_show', { 'id': ticket.id }) }}">{{ ticket.name }}</a>
@@ -65,4 +66,8 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="text-[18px] text-gray-800 text-center mt-4">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}

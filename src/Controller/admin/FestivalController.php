@@ -6,6 +6,7 @@ use App\Entity\Festival;
 use App\Form\CreateFestivalForm;
 use App\Repository\FestivalRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,19 @@ use Symfony\Component\Routing\Attribute\Route;
 final class FestivalController extends AbstractController
 {
     #[Route('/admin/festival', name: 'app_admin_festival', methods: ['GET'])]
-    public function index(FestivalRepository $festivalRepository): Response
+    public function index(
+        FestivalRepository $festivalRepository,
+        PaginatorInterface $paginator,
+        Request $request): Response
     {
+        $searchParam = $request->query->get('search');
+
+        $pagination = $paginator->paginate(
+            $festivalRepository->getFestivalsQueryBuilder($searchParam),
+            $request->query->getInt('page', 1), 10);
+
         return $this->render('/admin/festival/index.html.twig', [
-            'festivals' => $festivalRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 

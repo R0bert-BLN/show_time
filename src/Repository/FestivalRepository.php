@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Festival;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,6 +23,21 @@ class FestivalRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    public function getFestivalsQueryBuilder(?string $searchTerm): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('f')
+            ->leftJoin('f.location', 'l')
+            ->orderBy('f.name', 'ASC');
+
+        if ($searchTerm) {
+            $queryBuilder
+                ->andWhere('f.name LIKE :searchTerm OR l.name LIKE :searchTerm OR l.city LIKE :searchTerm')
+                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
+
+        return $queryBuilder;
     }
 
     //    /**
