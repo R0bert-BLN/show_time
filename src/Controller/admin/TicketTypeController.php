@@ -3,6 +3,10 @@
 namespace App\Controller\admin;
 
 use App\Entity\TicketType;
+use App\Filter\BandFilter;
+use App\Filter\TicketTypeFilter;
+use App\Form\BandFilterForm;
+use App\Form\TicketTypeFilterForm;
 use App\Form\TicketTypeForm;
 use App\Repository\TicketTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,14 +24,17 @@ final class TicketTypeController extends AbstractController
         PaginatorInterface $paginator,
         Request $request): Response
     {
-        $searchParam = $request->query->get('search');
+        $filter = new TicketTypeFilter();
+        $form = $this->createForm(TicketTypeFilterForm::class, $filter);
+        $form->handleRequest($request);
 
         $pagination = $paginator->paginate(
-            $ticketTypeRepository->getTicketTypesQueryBuilder($searchParam),
+            $ticketTypeRepository->getTicketTypesQueryBuilder($filter),
             $request->query->getInt('page', 1), 10);
 
         return $this->render('/admin/ticket_type/index.html.twig', [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'filterForm' => $form->createView(),
         ]);
     }
 

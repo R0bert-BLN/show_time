@@ -3,8 +3,12 @@
 namespace App\Controller\admin;
 
 use App\Entity\Band;
+use App\Filter\BandFilter;
+use App\Filter\FestivalFilter;
+use App\Form\BandFilterForm;
 use App\Form\BandForm;
 use App\Form\CreateFestivalForm;
+use App\Form\FestivalFilterForm;
 use App\Repository\BandRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -25,14 +29,17 @@ final class BandController extends AbstractController
         PaginatorInterface $paginator,
         Request $request): Response
     {
-        $searchParam = $request->query->get('search');
+        $filter = new BandFilter();
+        $form = $this->createForm(BandFilterForm::class, $filter);
+        $form->handleRequest($request);
 
         $pagination = $paginator->paginate(
-            $bandRepository->getBandsQueryBuilder($searchParam),
+            $bandRepository->getBandsQueryBuilder($filter),
             $request->query->getInt('page', 1), 10);
 
         return $this->render('admin/band/index.html.twig', [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'filterForm' => $form->createView(),
         ]);
     }
 

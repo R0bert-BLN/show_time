@@ -6,12 +6,14 @@
     {% include 'admin/components/_nav_bar.html.twig' with {
         title: 'Tickets',
         add_path: 'app_admin_ticket_type_new',
-        search_path: 'app_admin_ticket_type'} %}
+        search_path: 'app_admin_ticket_type',
+        filterForm: filterForm,
+        componentForm: 'shared/components/_ticket_type_filter_form.html.twig'} %}
 
     <div x-data="{...colors()}" class="flex justify-center w-5/6 mx-auto mt-15">
         <a href="{{ path('app_admin_ticket_type') }}" class="text-[25px] font-semibold hover:opacity-80 cursor-pointer px-5" :class="primaryColor">TYPE</a>
-        <a href="{{ path('app_admin_ticket_payment') }}" class="text-[25px] font-semibold hover:opacity-80 border-x-2 border-[#ca8f53] cursor-pointer px-5" :class="textColor">PAYMENT</a>
-        <a href="{{ path('app_admin_issued_ticket') }}" class="text-[25px] font-semibold hover:opacity-80 cursor-pointer px-5" :class="textColor">ISSUED</a>
+        <a @click.prevent="" href="{{ path('app_admin_ticket_payment') }}" class="text-[25px] font-semibold hover:opacity-80 border-x-2 border-[#ca8f53] cursor-pointer px-5" :class="textColor">PAYMENT</a>
+        <a @click.prevent="" href="{{ path('app_admin_issued_ticket') }}" class="text-[25px] font-semibold hover:opacity-80 cursor-pointer px-5" :class="textColor">ISSUED</a>
     </div>
 
     <table x-data="{...tables(), ...colors(), ...buttons()}" class="w-5/6 mt-10 mx-auto" :class="table" x-cloak>

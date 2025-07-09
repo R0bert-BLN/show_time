@@ -3,7 +3,9 @@
 namespace App\Controller\admin;
 
 use App\Entity\Festival;
+use App\Filter\FestivalFilter;
 use App\Form\CreateFestivalForm;
+use App\Form\FestivalFilterForm;
 use App\Repository\FestivalRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -20,14 +22,17 @@ final class FestivalController extends AbstractController
         PaginatorInterface $paginator,
         Request $request): Response
     {
-        $searchParam = $request->query->get('search');
+        $filter = new FestivalFilter();
+        $form = $this->createForm(FestivalFilterForm::class, $filter);
+        $form->handleRequest($request);
 
         $pagination = $paginator->paginate(
-            $festivalRepository->getFestivalsQueryBuilder($searchParam),
+            $festivalRepository->getFestivalsQueryBuilder($filter),
             $request->query->getInt('page', 1), 10);
 
         return $this->render('/admin/festival/index.html.twig', [
             'pagination' => $pagination,
+            'filterForm' => $form->createView(),
         ]);
     }
 

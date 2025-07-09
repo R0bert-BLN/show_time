@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Festival;
+use App\Filter\FestivalFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -25,16 +26,30 @@ class FestivalRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getFestivalsQueryBuilder(?string $searchTerm): QueryBuilder
+    public function getFestivalsQueryBuilder(?FestivalFilter $filter): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('f')
             ->leftJoin('f.location', 'l')
             ->orderBy('f.name', 'ASC');
 
-        if ($searchTerm) {
-            $queryBuilder
-                ->andWhere('f.name LIKE :searchTerm OR l.name LIKE :searchTerm OR l.city LIKE :searchTerm')
-                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        if ($filter) {
+            if ($filter->getStartDate()) {
+                $queryBuilder
+                    ->andWhere('f.startDate >= :startDate')
+                    ->setParameter('startDate', $filter->getStartDate());
+            }
+
+            if ($filter->getEndDate()) {
+                $queryBuilder
+                    ->andWhere('f.endDate <= :endDate')
+                    ->setParameter('endDate', $filter->getEndDate());
+            }
+
+            if ($filter->getSearchParam()) {
+                $queryBuilder
+                    ->andWhere('f.name LIKE :searchParam OR l.city LIKE :searchParam')
+                    ->setParameter('searchParam', '%' . $filter->getSearchParam() . '%');
+            }
         }
 
         return $queryBuilder;

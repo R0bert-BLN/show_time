@@ -6,7 +6,9 @@
     {% include 'admin/components/_nav_bar.html.twig' with {
         title: 'Festivals',
         add_path: 'app_admin_festival_new',
-        search_path: 'app_admin_festival'} %}
+        search_path: 'app_admin_festival',
+        filterForm: filterForm,
+        componentForm: 'shared/components/_festival_filter_form.html.twig'} %}
 
     <table x-data="{...tables(), ...colors(), ...buttons()}" class="w-9/12 mt-12 mx-auto" :class="table" x-cloak>
         <thead>

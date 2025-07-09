@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Band;
+use App\Filter\BandFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,15 +18,17 @@ class BandRepository extends ServiceEntityRepository
         parent::__construct($registry, Band::class);
     }
 
-    public function getBandsQueryBuilder(?string $searchTerm): QueryBuilder
+    public function getBandsQueryBuilder(?BandFilter $filter): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('b')
             ->orderBy('b.name', 'ASC');
 
-        if ($searchTerm) {
-            $queryBuilder
-                ->andWhere('b.name LIKE :searchTerm OR b.genre LIKE :searchTerm')
-                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+        if ($filter) {
+            if ($filter->getSearchParam()) {
+                $queryBuilder
+                    ->andWhere('b.name LIKE :searchTerm OR b.genre LIKE :searchTerm')
+                    ->setParameter('searchTerm', '%' . $filter->getSearchParam() . '%');
+            }
         }
 
         return $queryBuilder;
