@@ -18,6 +18,17 @@ class TicketTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, TicketType::class);
     }
 
+    public function getSoldTickets(TicketType $ticketType): int
+    {
+        return (int) $this->createQueryBuilder('t')
+            ->select('COUNT(i.id)')
+            ->leftJoin('t.issuedTickets', 'i')
+            ->andWhere('i.ticketType = :ticketType')
+            ->setParameter('ticketType', $ticketType)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function getTicketTypesQueryBuilder(?TicketTypeFilter $filter): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('t')

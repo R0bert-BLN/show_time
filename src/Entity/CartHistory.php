@@ -21,7 +21,7 @@ class CartHistory
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'cartHistory')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
     #[ORM\Column(enumType: CartStatus::class)]
@@ -30,11 +30,14 @@ class CartHistory
     /**
      * @var Collection<int, CartItem>
      */
-    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart', cascade: ['persist'], orphanRemoval: true)]
     private Collection $cartItems;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
+
+    #[ORM\OneToOne(mappedBy: 'cart', cascade: ['persist', 'remove'])]
+    private ?Booking $booking = null;
 
     #[Orm\PrePersist]
     public function onCreate(): void
@@ -130,6 +133,28 @@ class CartHistory
     public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getBooking(): ?Booking
+    {
+        return $this->booking;
+    }
+
+    public function setBooking(?Booking $booking): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($booking === null && $this->booking !== null) {
+            $this->booking->setCart(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($booking !== null && $booking->getCart() !== $this) {
+            $booking->setCart($this);
+        }
+
+        $this->booking = $booking;
 
         return $this;
     }

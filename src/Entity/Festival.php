@@ -71,12 +71,6 @@ class Festival
     #[ORM\OneToMany(targetEntity: TicketType::class, mappedBy: 'festival', orphanRemoval: true)]
     private Collection $ticketTypes;
 
-    /**
-     * @var Collection<int, Booking>
-     */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'festival')]
-    private Collection $bookings;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 

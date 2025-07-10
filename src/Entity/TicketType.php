@@ -63,28 +63,21 @@ class TicketType
     private ?string $currency = null;
 
     /**
-     * @var Collection<int, Booking>
-     */
-    #[ORM\ManyToMany(targetEntity: Booking::class, mappedBy: 'ticketType')]
-    private Collection $bookings;
-
-    /**
      * @var Collection<int, IssuedTicket>
      */
     #[ORM\OneToMany(targetEntity: IssuedTicket::class, mappedBy: 'ticketType')]
     private Collection $issuedTickets;
-
-    /**
-     * @var Collection<int, TicketPayment>
-     */
-    #[ORM\ManyToMany(targetEntity: TicketPayment::class, mappedBy: 'ticketTypes')]
-    private Collection $ticketPayments;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
+
+    public function getSoldTickets(): int
+    {
+        return $this->issuedTickets->count();
+    }
 
     #[ORM\PrePersist]
     public function onCreate(): void
@@ -100,9 +93,7 @@ class TicketType
 
     public function __construct()
     {
-        $this->bookings = new ArrayCollection();
         $this->issuedTickets = new ArrayCollection();
-        $this->ticketPayments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -207,33 +198,6 @@ class TicketType
     }
 
     /**
-     * @return Collection<int, Booking>
-     */
-    public function getBookings(): Collection
-    {
-        return $this->bookings;
-    }
-
-    public function addBooking(Booking $booking): static
-    {
-        if (!$this->bookings->contains($booking)) {
-            $this->bookings->add($booking);
-            $booking->addTicketType($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBooking(Booking $booking): static
-    {
-        if ($this->bookings->removeElement($booking)) {
-            $booking->removeTicketType($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, IssuedTicket>
      */
     public function getIssuedTickets(): Collection
@@ -258,33 +222,6 @@ class TicketType
             if ($issuedTicket->getTicketType() === $this) {
                 $issuedTicket->setTicketType(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TicketPayment>
-     */
-    public function getTicketPayments(): Collection
-    {
-        return $this->ticketPayments;
-    }
-
-    public function addTicketPayment(TicketPayment $ticketPayment): static
-    {
-        if (!$this->ticketPayments->contains($ticketPayment)) {
-            $this->ticketPayments->add($ticketPayment);
-            $ticketPayment->addTicketType($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTicketPayment(TicketPayment $ticketPayment): static
-    {
-        if ($this->ticketPayments->removeElement($ticketPayment)) {
-            $ticketPayment->removeTicketType($this);
         }
 
         return $this;

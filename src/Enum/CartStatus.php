@@ -4,6 +4,7 @@ namespace App\Enum;
 
 enum CartStatus: string
 {
-    case ORDERED = 'ordered';
+    case PROCESSING = 'processing';
     case ACTIVE = 'active';
+    case COMPLETED = 'completed';
 }

@@ -17,6 +17,7 @@ final class CartHistoryController extends AbstractController
         return $this->render('public/cart_history/index.html.twig', [
             'cart' => $cartHistoryService->getCartItems($this->getUser()),
             'total' => $cartHistoryService->getTotalAmount($this->getUser()),
+            'stripe_public_key' => $_ENV['STRIPE_PUBLIC_KEY'],
         ]);
     }
 

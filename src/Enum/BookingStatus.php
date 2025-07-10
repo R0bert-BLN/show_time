@@ -4,8 +4,7 @@ namespace App\Enum;
 
 enum BookingStatus: string
 {
-    case CONFIRMED = 'confirmed';
+    case COMPLETED = 'completed';
     case CANCELLED = 'cancelled';
     case PENDING = 'pending';
-    case EXPIRED = 'expired';
 }

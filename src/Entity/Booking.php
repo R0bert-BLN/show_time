@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Booking
 {
     #[ORM\Id]
@@ -16,38 +17,46 @@ class Booking
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Festival $festival = null;
-
-    #[ORM\Column]
-    private ?\DateTime $expireTime = null;
-
     #[ORM\Column]
     private ?\DateTime $createdAt = null;
 
     #[ORM\Column(enumType: BookingStatus::class)]
     private ?BookingStatus $status = null;
 
-    #[ORM\Column]
-    private ?int $quantity = null;
-
-    /**
-     * @var Collection<int, TicketType>
-     */
-    #[ORM\ManyToMany(targetEntity: TicketType::class, inversedBy: 'bookings')]
-    private Collection $ticketType;
+    #[ORM\Column(nullable: false)]
+    private string $transactionId;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
+    /**
+     * @var Collection<int, IssuedTicket>
+     */
+    #[ORM\OneToMany(targetEntity: IssuedTicket::class, mappedBy: 'booking')]
+    private Collection $issuedTickets;
+
+    #[ORM\OneToOne(inversedBy: 'booking', cascade: ['persist', 'remove'])]
+    private ?CartHistory $cart = null;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
     public function __construct()
     {
-        $this->ticketType = new ArrayCollection();
+        $this->issuedTickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,28 +64,14 @@ class Booking
         return $this->id;
     }
 
-    public function getFestival(): ?Festival
+    public function getTransactionId(): string
     {
-        return $this->festival;
+        return $this->transactionId;
     }
 
-    public function setFestival(?Festival $festival): static
+    public function setTransactionId(string $transactionId): void
     {
-        $this->festival = $festival;
-
-        return $this;
-    }
-
-    public function getExpireTime(): ?\DateTime
-    {
-        return $this->expireTime;
-    }
-
-    public function setExpireTime(\DateTime $expireTime): static
-    {
-        $this->expireTime = $expireTime;
-
-        return $this;
+        $this->transactionId = $transactionId;
     }
 
     public function getCreatedAt(): ?\DateTime
@@ -103,42 +98,6 @@ class Booking
         return $this;
     }
 
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): static
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TicketType>
-     */
-    public function getTicketType(): Collection
-    {
-        return $this->ticketType;
-    }
-
-    public function addTicketType(TicketType $ticketType): static
-    {
-        if (!$this->ticketType->contains($ticketType)) {
-            $this->ticketType->add($ticketType);
-        }
-
-        return $this;
-    }
-
-    public function removeTicketType(TicketType $ticketType): static
-    {
-        $this->ticketType->removeElement($ticketType);
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -159,6 +118,48 @@ class Booking
     public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, IssuedTicket>
+     */
+    public function getIssuedTickets(): Collection
+    {
+        return $this->issuedTickets;
+    }
+
+    public function addIssuedTicket(IssuedTicket $issuedTicket): static
+    {
+        if (!$this->issuedTickets->contains($issuedTicket)) {
+            $this->issuedTickets->add($issuedTicket);
+            $issuedTicket->setBooking($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIssuedTicket(IssuedTicket $issuedTicket): static
+    {
+        if ($this->issuedTickets->removeElement($issuedTicket)) {
+            // set the owning side to null (unless already changed)
+            if ($issuedTicket->getBooking() === $this) {
+                $issuedTicket->setBooking(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCart(): ?CartHistory
+    {
+        return $this->cart;
+    }
+
+    public function setCart(?CartHistory $cart): static
+    {
+        $this->cart = $cart;
 
         return $this;
     }

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: IssuedTicketRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class IssuedTicket
 {
     #[ORM\Id]
@@ -20,17 +21,16 @@ class IssuedTicket
     #[ORM\JoinColumn(nullable: false)]
     private ?TicketType $ticketType = null;
 
+    #[ORM\Column]
+    private ?string $qrCodeId = null;
+
     #[ORM\Column(enumType: IssuedTicketStatus::class)]
     private ?IssuedTicketStatus $status = null;
-
-    #[ORM\ManyToOne(inversedBy: 'issuedTickets')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?TicketPayment $ticketPayment = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
     /**
@@ -38,6 +38,22 @@ class IssuedTicket
      */
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'issuedTickets')]
     private Collection $user;
+
+    #[ORM\ManyToOne(inversedBy: 'issuedTickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Booking $booking = null;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 
     public function __construct()
     {
@@ -47,6 +63,16 @@ class IssuedTicket
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getQrCodeId(): ?string
+    {
+        return $this->qrCodeId;
+    }
+
+    public function setQrCodeId(?string $qrCodeId): void
+    {
+        $this->qrCodeId = $qrCodeId;
     }
 
     public function getTicketType(): ?TicketType
@@ -69,18 +95,6 @@ class IssuedTicket
     public function setStatus(IssuedTicketStatus $status): static
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getTicketPayment(): ?TicketPayment
-    {
-        return $this->ticketPayment;
-    }
-
-    public function setTicketPayment(?TicketPayment $ticketPayment): static
-    {
-        $this->ticketPayment = $ticketPayment;
 
         return $this;
     }
@@ -129,6 +143,18 @@ class IssuedTicket
     public function removeUser(User $user): static
     {
         $this->user->removeElement($user);
+
+        return $this;
+    }
+
+    public function getBooking(): ?Booking
+    {
+        return $this->booking;
+    }
+
+    public function setBooking(?Booking $booking): static
+    {
+        $this->booking = $booking;
 
         return $this;
     }

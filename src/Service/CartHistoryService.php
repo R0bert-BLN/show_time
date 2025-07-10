@@ -43,6 +43,52 @@ class CartHistoryService
         }
     }
 
+    public function getActiveCart(?User $user): CartHistory
+    {
+        if ($user) {
+            $cart = $this->cartHistoryRepository->findOneBy(['user' => $user, 'status' => CartStatus::ACTIVE]);
+
+            if (null === $cart) {
+                $cart = new CartHistory();
+                $cart->setUser($user);
+                $cart->setStatus(CartStatus::ACTIVE);
+                $cart->setCreatedAt(new \DateTimeImmutable());
+                $this->entityManager->persist($cart);
+            }
+
+            return $cart;
+        }
+
+
+        $cart = new CartHistory();
+        $cart->setStatus(CartStatus::ACTIVE);
+
+        $sessionCartItems = $this->session->get(self::CART_SESSION_KEY, []);
+        if (empty($sessionCartItems)) {
+            return $cart;
+        }
+
+        $ticketIds = array_keys($sessionCartItems);
+        $ticketTypes = $this->entityManager->getRepository(TicketType::class)->findBy(['id' => $ticketIds]);
+
+        $ticketMap = [];
+        foreach ($ticketTypes as $ticketType) {
+            $ticketMap[$ticketType->getId()] = $ticketType;
+        }
+
+        foreach ($sessionCartItems as $ticketId => $quantity) {
+            if (isset($ticketMap[$ticketId])) {
+                $cartItem = new CartItem();
+                $cartItem->setTicketType($ticketMap[$ticketId]);
+                $cartItem->setQuantity($quantity);
+
+                $cart->addCartItem($cartItem);
+            }
+        }
+
+        return $cart;
+    }
+
     public function getTotalAmount(?User $user): float
     {
         $total = 0.0;

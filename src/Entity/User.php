@@ -66,12 +66,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: IssuedTicket::class, mappedBy: 'user')]
     private Collection $issuedTickets;
 
-    /**
-     * @var Collection<int, TicketPayment>
-     */
-    #[ORM\OneToMany(targetEntity: TicketPayment::class, mappedBy: 'user')]
-    private Collection $ticketPayments;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -304,36 +298,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->issuedTickets->removeElement($issuedTicket)) {
             $issuedTicket->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TicketPayment>
-     */
-    public function getTicketPayments(): Collection
-    {
-        return $this->ticketPayments;
-    }
-
-    public function addTicketPayment(TicketPayment $ticketPayment): static
-    {
-        if (!$this->ticketPayments->contains($ticketPayment)) {
-            $this->ticketPayments->add($ticketPayment);
-            $ticketPayment->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTicketPayment(TicketPayment $ticketPayment): static
-    {
-        if ($this->ticketPayments->removeElement($ticketPayment)) {
-            // set the owning side to null (unless already changed)
-            if ($ticketPayment->getUser() === $this) {
-                $ticketPayment->setUser(null);
-            }
         }
 
         return $this;
