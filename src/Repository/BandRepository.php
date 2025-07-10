@@ -29,6 +29,12 @@ class BandRepository extends ServiceEntityRepository
                     ->andWhere('b.name LIKE :searchTerm OR b.genre LIKE :searchTerm')
                     ->setParameter('searchTerm', '%' . $filter->getSearchParam() . '%');
             }
+
+            if ($filter->getGenres()) {
+                $queryBuilder
+                    ->andWhere('b.genre IN (:genres)')
+                    ->setParameter('genres', $filter->getGenres());
+            }
         }
 
         return $queryBuilder;

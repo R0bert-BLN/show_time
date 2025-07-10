@@ -55,9 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $bookings;
 
     /**
-     * @var Collection<int, Cart>
+     * @var Collection<int, CartHistory>
      */
-    #[ORM\OneToMany(targetEntity: Cart::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: CartHistory::class, mappedBy: 'user')]
     private Collection $cartHistory;
 
     /**

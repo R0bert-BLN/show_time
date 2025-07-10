@@ -30,6 +30,30 @@ class TicketTypeRepository extends ServiceEntityRepository
                     ->andWhere('t.name LIKE :searchTerm OR f.name LIKE :searchTerm')
                     ->setParameter('searchTerm', '%' . $filter->getSearchParam() . '%');
             }
+
+            if ($filter->getMinTickets()) {
+                $queryBuilder
+                    ->andWhere('t.totalTickets >= :minTickets')
+                    ->setParameter('minTickets', $filter->getMinTickets());
+            }
+
+            if ($filter->getMaxTickets()) {
+                $queryBuilder
+                    ->andWhere('t.totalTickets <= :maxTickets')
+                    ->setParameter('maxTickets', $filter->getMaxTickets());
+            }
+
+            if ($filter->getMinPrice()) {
+                $queryBuilder
+                    ->andWhere('t.price >= :minPrice')
+                    ->setParameter('minPrice', $filter->getMinPrice());
+            }
+
+            if ($filter->getMaxPrice()) {
+                $queryBuilder
+                    ->andWhere('t.price <= :maxPrice')
+                    ->setParameter('maxPrice', $filter->getMaxPrice());
+            }
         }
 
         return $queryBuilder;
