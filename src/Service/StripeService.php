@@ -11,7 +11,7 @@ class StripeService
 {
     public function __construct(private RouterInterface $router)
     {
-        Stripe::setApiKey('sk_test_51RjOUqCK5cMFxUB5XHZy9sqTtvl8aRDKdndhvkk0XhZeNeWT0qqzA7ZfWTrVx2ccJk5QY4XR9GToumZ5QvSF8MgI0010YLfWuK');
+        Stripe::setApiKey('');
     }
 
     public function createCheckoutSession(array $cart): Session
