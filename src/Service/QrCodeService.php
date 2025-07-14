@@ -2,51 +2,48 @@
 
 namespace App\Service;
 
-use Endroid\QrCode\Builder\BuilderInterface;
-use Endroid\QrCode\Writer\PngWriter;
-use TCPDF;
+use App\Repository\IssuedTicketRepository;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Endroid\QrCode\Builder\Builder;
 
 class QrCodeService
 {
-    public function __construct(private BuilderInterface $qrBuilder) {}
+    public function __construct(private IssuedTicketRepository $issuedTicketRepository) {}
 
-    public function generateQrCode(string $data): string
+    public function generateQrCodePdf(string $transactionId): string
     {
-        $result = $this->qrBuilder
-            ->data($data)
-            ->size(200)
-            ->margin(10)
-            ->writer(new PngWriter())
-            ->build();
+        $issuedTickets = $this->issuedTicketRepository->findByTransactionId($transactionId);
 
-        $fileName = uniqid('qr_', true) . '.png';
-        $filePath = sys_get_temp_dir() . '/' . $fileName;
-        file_put_contents($filePath, $result->getString());
+        $html = '<html><body>';
 
-        return $filePath;
-    }
+        foreach ($issuedTickets as $issuedTicket) {
+            $builder = new Builder(
+                data: $issuedTicket->getQrCodeId(),
+                size: 250,
+                margin: 10
+            );
 
-    public function generatePdfWithQrCodes(array $qrPaths): string
-    {
-        $pdf = new TCPDF();
-        $pdf->AddPage();
+            $qrCodeUri = $builder->build()->getDataUri();
 
-        $x = 15;
-        $y = 20;
-        foreach ($qrPaths as $i => $qrPath) {
-            if ($i > 0 && $i % 4 == 0) {
-                $pdf->AddPage();
-                $x = 15;
-                $y = 20;
-            }
-
-            $pdf->Image($qrPath, $x, $y, 50, 50);
-            $y += 60;
+            $html .= <<<HTML
+                <div style="page-break-after: always; text-align: center; margin-bottom: 40px;">
+                    <h2>{$issuedTicket->getTicketType()->getName()}</h2>
+                    <img src="{$qrCodeUri}" alt="QR Code">
+                </div>
+            HTML;
         }
 
-        $pdfPath = sys_get_temp_dir() . '/' . uniqid('qrs_', true) . '.pdf';
-        $pdf->Output($pdfPath, 'F');
+        $html .= '</body></html>';
 
-        return $pdfPath;
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4');
+        $dompdf->render();
+
+        return $dompdf->output();
     }
 }

@@ -9,9 +9,9 @@ use Symfony\Component\Routing\RouterInterface;
 
 class StripeService
 {
-    public function __construct(private RouterInterface $router)
+    public function __construct(private string $stripeSecretKey, private RouterInterface $router)
     {
-        Stripe::setApiKey('');
+        Stripe::setApiKey($this->stripeSecretKey);
     }
 
     public function createCheckoutSession(array $cart): Session
@@ -35,8 +35,8 @@ class StripeService
             'payment_method_types' => ['card'],
             'line_items' => $items,
             'mode' => 'payment',
-            'success_url' => $this->router->generate('app_checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            'cancel_url' => $this->router->generate('app_checkout_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'success_url' => $this->router->generate('app_checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => $this->router->generate('app_checkout_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL). '?session_id={CHECKOUT_SESSION_ID}',
         ]);
     }
 }

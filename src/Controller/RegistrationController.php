@@ -30,6 +30,12 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]) ?? $user;
+
+            $user->setFirstName($form->get('firstName')->getData());
+            $user->setLastName($form->get('lastName')->getData());
+            $user->setEmail($form->get('email')->getData());
+
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 

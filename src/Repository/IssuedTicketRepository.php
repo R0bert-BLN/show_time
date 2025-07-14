@@ -16,28 +16,14 @@ class IssuedTicketRepository extends ServiceEntityRepository
         parent::__construct($registry, IssuedTicket::class);
     }
 
-//    /**
-//     * @return IssuedTicket[] Returns an array of IssuedTicket objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?IssuedTicket
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findByTransactionId($value): array
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.booking', 'b')
+            ->andWhere('b.transactionId = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
