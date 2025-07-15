@@ -35,9 +35,15 @@ final class CartHistoryController extends AbstractController
 
         $cartHistoryService->addItemToCart($user, $ticketType, $quantity);
 
-        $this->addFlash('success', sprintf('%d x %s added to cart.', $quantity, $ticketType->getName()));
+        $this->addFlash('success', sprintf('%d x %s ticket added to cart.', $quantity, $ticketType->getName()));
 
-        return new Response(null, Response::HTTP_OK);
+        $referer = $request->headers->get('referer');
+
+        if (!$referer) {
+            $referer = $this->generateUrl('app_festival');
+        }
+
+        return $this->redirect($referer);
     }
 
     #[Route('cart/update/{id}', name: 'app_cart_update', methods: ['POST'], format: 'turbo-stream')]

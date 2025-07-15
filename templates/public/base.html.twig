@@ -18,6 +18,8 @@
     </head>
 
     <body x-data="{...colors(), ...buttons()}" class="bg-[#202020] flex flex-col min-h-screen">
+        {% include 'shared/components/_notification.html.twig' %}
+
         <div class="sticky top-0 z-50 flex flex-col py-3 bg-[#202020] w-full">
             <div class="flex justify-between items-center">
                 <h1 class="text-[42px] font-bold ml-15" :class="primaryColor">

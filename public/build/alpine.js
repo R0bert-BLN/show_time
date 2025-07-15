@@ -3351,6 +3351,19 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     };
   }
 
+  // assets/js/components/notification.js
+  function notification() {
+    return {
+      show: true,
+      init() {
+        setTimeout(() => this.show = false, 4e3);
+      },
+      close() {
+        this.show = false;
+      }
+    };
+  }
+
   // assets/js/alpine.js
   window.Alpine = module_default;
   document.addEventListener("turbo:load", () => {
@@ -3362,5 +3375,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
     module_default.data("tables", tables);
     module_default.data("colors", colors);
     module_default.data("bandsSubForms", bandsSubForms);
+    module_default.data("notification", notification);
   });
 })();
