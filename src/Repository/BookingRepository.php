@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\Filter\TicketPaymentFilter;
+use App\Filter\TicketTypeFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,6 +17,28 @@ class BookingRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Booking::class);
+    }
+
+    public function getTicketPaymentsQueryBuilder(?TicketPaymentFilter $filter): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('b')
+            ->leftJoin('b.user', 'u');
+
+        if ($filter) {
+            if ($filter->getSearchParam()) {
+                $queryBuilder
+                    ->andWhere('b.transactionId LIKE :searchTerm OR u.email LIKE :searchTerm')
+                    ->setParameter('searchTerm', '%' . $filter->getSearchParam() . '%');
+            }
+
+            if ($filter->getStatus()) {
+                $queryBuilder
+                    ->andWhere('b.status LIKE :status')
+                    ->setParameter('status', $filter->getStatus());
+            }
+        }
+
+        return $queryBuilder;
     }
 
 //    /**

@@ -4,6 +4,7 @@ namespace App\Controller\public;
 
 use App\Entity\User;
 use App\Enum\BookingStatus;
+use App\Enum\CartStatus;
 use App\Repository\BookingRepository;
 use App\Service\BookingService;
 use App\Service\CartHistoryService;
@@ -74,12 +75,15 @@ final class CheckoutController extends AbstractController
     }
 
     #[Route('/checkout/cancel', name: 'app_checkout_cancel', methods: ['GET'])]
-    public function cancel(Request $request, BookingRepository $bookingRepository): Response
+    public function cancel(Request $request, BookingRepository $bookingRepository, EntityManagerInterface $entityManager): Response
     {
         $booking = $bookingRepository->findOneBy(['transactionId' => $request->query->get('session_id')]);
 
-        if ($booking) {
+        if ($booking->getStatus() !== BookingStatus::CANCELLED) {
             $booking->setStatus(BookingStatus::CANCELLED);
+            $booking->getCart()->setStatus(CartStatus::ACTIVE);
+
+            $entityManager->flush();
         }
 
         return $this->render('public/checkout/cancel.html.twig');

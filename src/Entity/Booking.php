@@ -27,7 +27,7 @@ class Booking
     private string $transactionId;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn()]
     private ?User $user = null;
 
     #[ORM\Column(nullable: true)]

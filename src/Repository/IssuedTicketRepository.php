@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\IssuedTicket;
+use App\Filter\TicketIssuedFilter;
+use App\Filter\TicketPaymentFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,5 +28,29 @@ class IssuedTicketRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function getIssuedTicketsQueryBuilder(?TicketIssuedFilter $filter): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('i')
+            ->leftJoin('i.booking', 'b')
+            ->leftJoin('i.ticketType', 't')
+            ->leftJoin('t.festival', 'f');
+
+        if ($filter) {
+            if ($filter->getSearchParam()) {
+                $queryBuilder
+                    ->andWhere('i.qrCodeId LIKE :searchTerm OR t.name LIKE :searchTerm OR f.name LIKE :searchTerm OR b.transactionId LIKE :searchTerm')
+                    ->setParameter('searchTerm', '%' . $filter->getSearchParam() . '%');
+            }
+
+            if ($filter->getStatus()) {
+                $queryBuilder
+                    ->andWhere('i.status LIKE :status')
+                    ->setParameter('status', $filter->getStatus());
+            }
+        }
+
+        return $queryBuilder;
     }
 }

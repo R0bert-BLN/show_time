@@ -51,6 +51,17 @@ class CartHistory
         $this->updatedAt = new \DateTime();
     }
 
+    public function getTotalAmount(): float
+    {
+        $total = 0.0;
+
+        foreach ($this->cartItems as $item) {
+            $total += $item->getTicketType()->getPrice() * $item->getQuantity();
+        }
+
+        return $total;
+    }
+
     public function __construct()
     {
         $this->cartItems = new ArrayCollection();

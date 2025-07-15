@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <nav x-data class="flex flex-col text-[22px] font-bold w-full mt-13" x-transition>
+        <nav x-data class="flex flex-col text-[22px] font-bold w-full my-auto" x-transition>
             {% set currentRoute = app.request.attributes.get('_route') %}
 
             <a href="{{ path('app_admin_dashboard') }}"
@@ -41,7 +41,7 @@
             </a>
 
             <a href="{{ path('app_admin_ticket_type') }}"
-               class="py-2 text-center hover:bg-[#2d2d2d] {{ currentRoute starts with 'app_admin_ticket_type' ? 'bg-[#2d2d2d]' : '' }}">
+               class="py-2 text-center hover:bg-[#2d2d2d] {{ currentRoute starts with 'app_admin_ticket' ? 'bg-[#2d2d2d]' : '' }}">
                 Tickets
             </a>
 
